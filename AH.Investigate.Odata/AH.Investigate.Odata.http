@@ -1,0 +1,6 @@
+@AH.Investigate.Odata_HostAddress = http://localhost:5039
+
+GET {{AH.Investigate.Odata_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
