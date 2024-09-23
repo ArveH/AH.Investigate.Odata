@@ -19,6 +19,15 @@ public class ClientsController : ControllerBase
         return _context.Clients.AsQueryable();
     }
 
+    // GET: api/Clients
+    [HttpGet]
+    [Route("/odata/oldclients")]
+    [EnableQuery]
+    public async Task<ActionResult<IEnumerable<Client>>> OldGetClients()
+    {
+        return await _context.Clients.ToListAsync();
+    }
+
     // GET: api/Clients/5
     [HttpGet("{id}")]
     public async Task<ActionResult<Client>> GetClient(int id)
