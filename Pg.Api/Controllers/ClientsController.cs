@@ -14,9 +14,9 @@ public class ClientsController : ControllerBase
     // GET: api/Clients
     [HttpGet]
     [EnableQuery]
-    public async Task<ActionResult<IEnumerable<Client>>> GetClients()
+    public IQueryable<Client> GetClients()
     {
-        return await _context.Clients.ToListAsync();
+        return _context.Clients.AsQueryable();
     }
 
     // GET: api/Clients/5
