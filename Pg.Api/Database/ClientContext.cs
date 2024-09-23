@@ -29,5 +29,11 @@ public class ClientContext: DbContext
                 provider: "icu",
                 locale: "en-u-ks-level2",
                 deterministic: false);
+
+        modelBuilder.Entity<Client>().HasData([
+            new Client {Id = 1, Name = "Client 1", Description = "The first client"},
+            new Client {Id = 2, Name = "Client 2", Description = "The second client"},
+            new Client {Id = 3, Name = "Another", Description = "This is another client"}
+        ]);
     }
 }
