@@ -13,6 +13,7 @@ public class ClientsController : ControllerBase
 
     // GET: api/Clients
     [HttpGet]
+    [EnableQuery]
     public async Task<ActionResult<IEnumerable<Client>>> GetClients()
     {
         return await _context.Clients.ToListAsync();
