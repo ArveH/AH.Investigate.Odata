@@ -9,6 +9,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.AspNetCore.OData"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.OData.Core", "Microsoft.OData.Core\Microsoft.OData.Core.csproj", "{A6B25EF2-87FB-4711-A8DB-0FC821917961}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.OData.Edm", "Microsoft.OData.Edm\Microsoft.OData.Edm.csproj", "{A9ADEAEB-0708-4EEC-A4CB-CCEC829B6989}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Spatial", "Microsoft.Spatial\Microsoft.Spatial.csproj", "{B8898D3F-088D-4AE4-81C2-BC3F1585E0C3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{A6B25EF2-87FB-4711-A8DB-0FC821917961}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A6B25EF2-87FB-4711-A8DB-0FC821917961}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A6B25EF2-87FB-4711-A8DB-0FC821917961}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9ADEAEB-0708-4EEC-A4CB-CCEC829B6989}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9ADEAEB-0708-4EEC-A4CB-CCEC829B6989}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9ADEAEB-0708-4EEC-A4CB-CCEC829B6989}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9ADEAEB-0708-4EEC-A4CB-CCEC829B6989}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8898D3F-088D-4AE4-81C2-BC3F1585E0C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8898D3F-088D-4AE4-81C2-BC3F1585E0C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8898D3F-088D-4AE4-81C2-BC3F1585E0C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8898D3F-088D-4AE4-81C2-BC3F1585E0C3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
