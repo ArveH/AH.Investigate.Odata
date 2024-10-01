@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.OData.Edm", "Micr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Spatial", "Microsoft.Spatial\Microsoft.Spatial.csproj", "{B8898D3F-088D-4AE4-81C2-BC3F1585E0C3}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.OData.ModelBuilder", "Microsoft.OData.ModelBuilder\Microsoft.OData.ModelBuilder.csproj", "{871CE360-F71E-4208-9297-139DAC21D287}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{B8898D3F-088D-4AE4-81C2-BC3F1585E0C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B8898D3F-088D-4AE4-81C2-BC3F1585E0C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B8898D3F-088D-4AE4-81C2-BC3F1585E0C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{871CE360-F71E-4208-9297-139DAC21D287}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{871CE360-F71E-4208-9297-139DAC21D287}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{871CE360-F71E-4208-9297-139DAC21D287}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{871CE360-F71E-4208-9297-139DAC21D287}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
