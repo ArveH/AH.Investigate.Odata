@@ -2,20 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <AssemblyName>Microsoft.OData.Edm</AssemblyName>
-    <RootNamespace>Microsoft.OData.Edm</RootNamespace>
-    <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
-    <DefineConstants>$(DefineConstants);SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE</DefineConstants>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
-  <Import Project="..\Build.props" />
-
-  <PropertyGroup Condition="'$(TreatWarningsAsErrors)' == 'false' or '$(TreatWarningsAsErrors)' == ''">
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <WarningsAsErrors>$(WarningsAsErrors);RS0017;RS0025</WarningsAsErrors>
-  </PropertyGroup>
-  
   <ItemGroup>
     <None Remove="Microsoft.OData.Edm.xml" />
   </ItemGroup>
@@ -50,7 +38,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\AssemblyInfo\AssemblyKeys.cs" Link="AssemblyKeys.cs" />
     <Compile Include="..\PlatformHelper.cs" Link="PlatformHelper.cs" />
   </ItemGroup>
 
