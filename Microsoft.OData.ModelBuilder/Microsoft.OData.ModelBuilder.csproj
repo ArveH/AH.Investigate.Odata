@@ -9,8 +9,6 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
-  <Import Project="..\..\build\build.props" />
-
   <ItemGroup>
     <None Remove="Microsoft.OData.ModelBuilder.xml" />
     <None Remove="Microsoft.OData.ModelBuilder.*.nuspec" />
@@ -22,10 +20,13 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.OData.Edm" Version="8.0.1" />
-    <PackageReference Include="Microsoft.Spatial" Version="8.0.1" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.6.0" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
+    <ProjectReference Include="..\Microsoft.Spatial\Microsoft.Spatial.csproj" />
   </ItemGroup>
 
   <ItemGroup>
