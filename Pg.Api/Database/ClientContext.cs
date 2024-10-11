@@ -2,7 +2,7 @@
 
 public class ClientContext: DbContext
 {
-    private const string CollationName = "en_ci_as";
+    public const string CollationName = "en_ci_as";
 
     public ClientContext(DbContextOptions<ClientContext> options)
         : base(options)
