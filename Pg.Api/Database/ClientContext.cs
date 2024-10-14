@@ -29,7 +29,7 @@ public class ClientContext: DbContext
         modelBuilder.HasCollation(CollationNameForLike,
                 provider: "icu",
                 locale: "en-u-ks-level2",
-                deterministic: false);
+                deterministic: true);
 
         modelBuilder.Entity<Client>().HasData([
             new Client {Id = 1, Name = "Client 1", Description = "The first client"},
