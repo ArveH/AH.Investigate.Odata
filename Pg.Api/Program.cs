@@ -6,32 +6,29 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-//builder.Services.AddControllers()
-//    .AddOData(opt => opt.AddRouteComponents(
-//        "odata", 
-//        GetEdmModel(), 
-//        s => s.AddSingleton<IFilterBinder, CustomFilterBinder>())
-//        .Select().Filter());
-//builder.Services.AddSingleton<IQuerySqlGeneratorFactory, CustomQuerySqlGeneratorFactory>();
+#if true // Add service for CustomFilterBinder
 builder.Services.AddControllers()
     .AddOData(opt => opt.AddRouteComponents(
         "odata",
         GetEdmModel(),
-        s => s.AddSingleton<IQuerySqlGeneratorFactory, CustomQuerySqlGeneratorFactory>())
+        s => s.AddSingleton<IFilterBinder, CustomFilterBinder>())
         .Select().Filter());
-
-//builder.Services.AddControllers()
-//    .AddOData(opt => opt.AddRouteComponents(
-//            "odata", 
-//            GetEdmModel())
-//        .Select().Filter());
+#else // No added services
+builder.Services.AddControllers()
+    .AddOData(opt => opt.AddRouteComponents(
+            "odata",
+            GetEdmModel())
+        .Select().Filter());
+#endif
 
 var connectionString = builder.Configuration.GetConnectionString("Default");
 builder.Services.AddDbContext<ClientContext>(
     ctx =>
     {
         ctx.UseNpgsql(connectionString);
+#if false
         ctx.ReplaceService<IQuerySqlGeneratorFactory, CustomQuerySqlGeneratorFactory>();
+#endif
     });
 
 var app = builder.Build();

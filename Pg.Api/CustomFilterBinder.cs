@@ -1,13 +1,13 @@
-﻿using System.Diagnostics.Contracts;
-using Microsoft.AspNetCore.OData.Query.Expressions;
+﻿using Microsoft.AspNetCore.OData.Query.Expressions;
 using Microsoft.OData.UriParser;
+using System.Diagnostics.Contracts;
 using System.Linq.Expressions;
-using System.Reflection;
 
 namespace Pg.Api;
 
 public class CustomFilterBinder : FilterBinder
 {
+#if true
     protected override Expression BindStartsWith(
         SingleValueFunctionCallNode node,
         QueryBinderContext context)
@@ -20,24 +20,41 @@ public class CustomFilterBinder : FilterBinder
         Contract.Assert(arguments.Length == 2 && arguments[0].Type == typeof(string) &&
                         arguments[1].Type == typeof(string));
 
-        ODataQuerySettings querySettings = context.QuerySettings;
-        IEnumerable<Expression> functionCallArguments = arguments;
-        if (querySettings.HandleNullPropagation == HandleNullPropagationOption.True)
-        {
-            // we don't have to check if the argument is null inside the function call as we do it already
-            // before calling the function. So remove the redundant null checks.
-            functionCallArguments = arguments.Select(a => RemoveInnerNullPropagation(a, querySettings));
-        }
+        var collateMethodInfo = typeof(RelationalDbFunctionsExtensions)
+                .GetMethod(nameof(RelationalDbFunctionsExtensions.Collate))
+            ?? throw new InvalidOperationException("Method 'Collate' not found");
+        var collateExpression = Expression.Call(
+            collateMethodInfo.MakeGenericMethod(typeof(string)),
+            Expression.Constant(EF.Functions),
+            arguments[0],
+            Expression.Constant(ClientContext.CollationNameForLike)
+        );
 
-        functionCallArguments = ExtractValueFromNullableArguments(functionCallArguments);
+        var likeExpression = Expression.Call(
+            typeof(DbFunctionsExtensions).GetMethod(
+                nameof(DbFunctionsExtensions.Like),
+                [typeof(DbFunctions), typeof(string), typeof(string)])!,
+            Expression.Constant(EF.Functions),
+            collateExpression,
+            arguments[1]
+        );
 
-        Type stringType = typeof(string);
-        MethodInfo startsWithMethodInfo = stringType.GetMethod("StartsWith", [typeof(string)]) ??
-                                          throw new InvalidOperationException("startsWithMethodInfo is null");
-        return Expression.Call(functionCallArguments.First(), startsWithMethodInfo,
-            functionCallArguments.Skip(1));
-
+        return likeExpression;
+        //return Expression.Lambda<Func<string, bool>>(likeExpression, (ParameterExpression)arguments[0]);
     }
+#else
+    protected override Expression BindStartsWith(SingleValueFunctionCallNode node, QueryBinderContext context)
+    {
+        CheckArgumentNull(node, context, "startswith");
+
+        Expression[] arguments = BindArguments(node.Parameters, context);
+        ValidateAllStringArguments(node.Name, arguments);
+
+        Contract.Assert(arguments.Length == 2 && arguments[0].Type == typeof(string) && arguments[1].Type == typeof(string));
+
+        return ExpressionBinderHelper.MakeFunctionCall(ClrCanonicalFunctions.StartsWith, context.QuerySettings, arguments);
+    }
+#endif
 
     private static IEnumerable<Expression> ExtractValueFromNullableArguments(IEnumerable<Expression> arguments)
     {
