@@ -14,33 +14,47 @@ public class CustomFilterBinder : FilterBinder
     {
         CheckArgumentNull(node, context, "startswith");
 
-        Expression[] arguments = BindArguments(node.Parameters, context);
-        ValidateAllStringArguments(node.Name, arguments);
+        var nodeParameters = node.Parameters.ToList();
 
-        Contract.Assert(arguments.Length == 2 && arguments[0].Type == typeof(string) &&
-                        arguments[1].Type == typeof(string));
+        if (nodeParameters.Count != 2)
+        {
+            throw new InvalidOperationException("BindStartsWith node doesn't have 2 parameters");
+        }
+
+        var matchExpression = Bind(nodeParameters[0], context);
+        Contract.Assert(matchExpression.Type == typeof(string));
+
+        var patternString = (nodeParameters[1] as ConstantNode)?.Value;
+        if (patternString == null)
+        {
+            throw new InvalidOperationException("BindStartsWith patternString is not a ConstantNode");
+        }
+        var patternExpression = Expression.Constant(patternString + "%");
 
         var collateMethodInfo = typeof(RelationalDbFunctionsExtensions)
                 .GetMethod(nameof(RelationalDbFunctionsExtensions.Collate))
-            ?? throw new InvalidOperationException("Method 'Collate' not found");
+            ?? throw new InvalidOperationException("MethodInfo for 'RelationalDbFunctionsExtensions.Collate' not found");
+        var iLikeMethodInfo = typeof(NpgsqlDbFunctionsExtensions)
+                .GetMethod(
+                    nameof(NpgsqlDbFunctionsExtensions.ILike),
+                    [typeof(DbFunctions), typeof(string), typeof(string)])
+            ?? throw new InvalidOperationException("MethodInfo for 'NpgsqlDbFunctionsExtensions.ILike' not found");
+
         var collateExpression = Expression.Call(
             collateMethodInfo.MakeGenericMethod(typeof(string)),
             Expression.Constant(EF.Functions),
-            arguments[0],
+            matchExpression,
             Expression.Constant(ClientContext.CollationNameForLike)
         );
 
         var likeExpression = Expression.Call(
-            typeof(DbFunctionsExtensions).GetMethod(
-                nameof(DbFunctionsExtensions.Like),
-                [typeof(DbFunctions), typeof(string), typeof(string)])!,
+            iLikeMethodInfo,
             Expression.Constant(EF.Functions),
             collateExpression,
-            arguments[1]
+            patternExpression
         );
 
         return likeExpression;
-        //return Expression.Lambda<Func<string, bool>>(likeExpression, (ParameterExpression)arguments[0]);
     }
 #else
     protected override Expression BindStartsWith(SingleValueFunctionCallNode node, QueryBinderContext context)
