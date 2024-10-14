@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.OData.Query.Expressions;
+using Microsoft.EntityFrameworkCore.Query;
 using Pg.Api;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,9 +14,17 @@ var builder = WebApplication.CreateBuilder(args);
 //        .Select().Filter());
 builder.Services.AddControllers()
     .AddOData(opt => opt.AddRouteComponents(
-            "odata", 
-            GetEdmModel())
+        "odata",
+        GetEdmModel(),
+        s => s.AddSingleton<IQuerySqlGeneratorFactory, CustomQuerySqlGeneratorFactory>())
         .Select().Filter());
+
+//builder.Services.AddControllers()
+//    .AddOData(opt => opt.AddRouteComponents(
+//            "odata", 
+//            GetEdmModel())
+//        .Select().Filter());
+
 var connectionString = builder.Configuration.GetConnectionString("Default");
 builder.Services.AddDbContext<ClientContext>(
     ctx => ctx.UseNpgsql(connectionString));
