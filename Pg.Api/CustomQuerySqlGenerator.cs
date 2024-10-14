@@ -10,12 +10,13 @@ using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using Microsoft.EntityFrameworkCore.Storage;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Query.Expressions;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Query.Expressions.Internal;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Query.Internal;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.Mapping;
 using NpgsqlTypes;
 
 namespace Pg.Api;
 
-public class CustomQuerySqlGenerator : QuerySqlGenerator
+public class CustomQuerySqlGenerator : NpgsqlQuerySqlGenerator
 {
     private readonly ISqlGenerationHelper _sqlGenerationHelper;
     private readonly IRelationalTypeMappingSource _typeMappingSource;
@@ -37,8 +38,8 @@ public class CustomQuerySqlGenerator : QuerySqlGenerator
         QuerySqlGeneratorDependencies dependencies,
         IRelationalTypeMappingSource typeMappingSource,
         bool reverseNullOrderingEnabled,
-        Version postgresVersion)
-        : base(dependencies)
+        Version postgresVersion) 
+            : base(dependencies, typeMappingSource, reverseNullOrderingEnabled, postgresVersion)
     {
         _sqlGenerationHelper = dependencies.SqlGenerationHelper;
         _typeMappingSource = typeMappingSource;

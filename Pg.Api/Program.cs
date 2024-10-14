@@ -12,6 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 //        GetEdmModel(), 
 //        s => s.AddSingleton<IFilterBinder, CustomFilterBinder>())
 //        .Select().Filter());
+//builder.Services.AddSingleton<IQuerySqlGeneratorFactory, CustomQuerySqlGeneratorFactory>();
 builder.Services.AddControllers()
     .AddOData(opt => opt.AddRouteComponents(
         "odata",
@@ -27,7 +28,11 @@ builder.Services.AddControllers()
 
 var connectionString = builder.Configuration.GetConnectionString("Default");
 builder.Services.AddDbContext<ClientContext>(
-    ctx => ctx.UseNpgsql(connectionString));
+    ctx =>
+    {
+        ctx.UseNpgsql(connectionString);
+        ctx.ReplaceService<IQuerySqlGeneratorFactory, CustomQuerySqlGeneratorFactory>();
+    });
 
 var app = builder.Build();
 
