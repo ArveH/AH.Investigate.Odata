@@ -1,8 +1,4 @@
-﻿using System.Diagnostics.Contracts;
-using System.Linq.Expressions;
-using Microsoft.OData.UriParser;
-
-namespace Pg.Api.CustomOdata;
+﻿namespace Pg.Api.CustomOdata;
 
 public class CustomFilterBinder : FilterBinder
 {

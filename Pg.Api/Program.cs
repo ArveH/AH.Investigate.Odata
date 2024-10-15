@@ -1,7 +1,7 @@
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var iLikeStrategy = LikeStrategy.CustomFilterBinder;
+var iLikeStrategy = LikeStrategy.CustomQuerySqlGenerator;
 
 builder.Services.AddControllers()
     .AddOData(opt =>
@@ -9,13 +9,17 @@ builder.Services.AddControllers()
         opt.AddRouteComponents(
                 "odata",
                 GetEdmModel(),
-                s => ReplaceServices(ref s))
+                s => ODataReplaceServices(ref s))
             .Select().Filter();
     });
 
 var connectionString = builder.Configuration.GetConnectionString("Default");
 builder.Services.AddDbContext<ClientContext>(
-    ctx => ctx.UseNpgsql(connectionString));
+    ctx =>
+    {
+        ctx.UseNpgsql(connectionString);
+        DbContextReplaceServices(ref ctx);
+    });
 
 var app = builder.Build();
 
@@ -36,10 +40,18 @@ static IEdmModel GetEdmModel()
     return builder.GetEdmModel();
 }
 
-void ReplaceServices(ref IServiceCollection serviceCollection)
+void ODataReplaceServices(ref IServiceCollection serviceCollection)
 {
     if (iLikeStrategy == LikeStrategy.CustomFilterBinder)
     {
         serviceCollection.AddSingleton<IFilterBinder, CustomFilterBinder>();
+    }
+}
+
+void DbContextReplaceServices(ref DbContextOptionsBuilder ctx)
+{
+    if (iLikeStrategy == LikeStrategy.CustomQuerySqlGenerator)
+    {
+        ctx.ReplaceService<IQuerySqlGeneratorFactory, CustomQuerySqlGeneratorFactory>();
     }
 }
