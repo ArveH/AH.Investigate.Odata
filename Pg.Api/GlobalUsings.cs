@@ -3,8 +3,10 @@
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.AspNetCore.OData;
 global using Microsoft.AspNetCore.OData.Query;
+global using Microsoft.AspNetCore.OData.Query.Expressions;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.OData.Edm;
 global using Microsoft.OData.ModelBuilder;
+global using Pg.Api.CustomOdata;
 global using Pg.Api.Database;
 global using Pg.Api.Database.Entities;

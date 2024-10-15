@@ -3,7 +3,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers()
-    .AddOData(opt => opt.AddRouteComponents("odata", GetEdmModel()).Select().Filter());
+    .AddOData(opt => opt.AddRouteComponents(
+        "odata", 
+        GetEdmModel(),
+        s => s.AddSingleton<IFilterBinder, CustomFilterBinder>())
+        .Select().Filter());
 
 var connectionString = builder.Configuration.GetConnectionString("Default");
 builder.Services.AddDbContext<ClientContext>(
