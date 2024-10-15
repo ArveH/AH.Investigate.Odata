@@ -1,7 +1,7 @@
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var iLikeStrategy = LikeStrategy.CustomQuerySqlGenerator;
+var iLikeStrategy = LikeStrategy.CustomFilterBinder;
 
 builder.Services.AddControllers()
     .AddOData(opt =>
