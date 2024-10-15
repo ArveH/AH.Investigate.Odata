@@ -1,13 +1,17 @@
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+var iLikeStrategy = LikeStrategy.CustomFilterBinder;
 
 builder.Services.AddControllers()
-    .AddOData(opt => opt.AddRouteComponents(
-        "odata", 
-        GetEdmModel(),
-        s => s.AddSingleton<IFilterBinder, CustomFilterBinder>())
-        .Select().Filter());
+    .AddOData(opt =>
+    {
+        opt.AddRouteComponents(
+                "odata",
+                GetEdmModel(),
+                s => ReplaceServices(ref s))
+            .Select().Filter();
+    });
 
 var connectionString = builder.Configuration.GetConnectionString("Default");
 builder.Services.AddDbContext<ClientContext>(
@@ -30,4 +34,12 @@ static IEdmModel GetEdmModel()
     var builder = new ODataConventionModelBuilder();
     builder.EntitySet<Client>("Clients");
     return builder.GetEdmModel();
+}
+
+void ReplaceServices(ref IServiceCollection serviceCollection)
+{
+    if (iLikeStrategy == LikeStrategy.CustomFilterBinder)
+    {
+        serviceCollection.AddSingleton<IFilterBinder, CustomFilterBinder>();
+    }
 }
