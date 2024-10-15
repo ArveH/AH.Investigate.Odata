@@ -2,7 +2,8 @@
 
 public class ClientContext: DbContext
 {
-    private const string CollationName = "en_ci_as";
+    public const string CollationName = "en_ci_as";
+    public const string CollationNameForLike = "en_ci_as_like";
 
     public ClientContext(DbContextOptions<ClientContext> options)
         : base(options)
@@ -25,15 +26,15 @@ public class ClientContext: DbContext
                 provider: "icu",
                 locale: "en-u-ks-level1",
                 deterministic: false);
-        modelBuilder.HasCollation(CollationName,
+        modelBuilder.HasCollation(CollationNameForLike,
                 provider: "icu",
                 locale: "en-u-ks-level2",
-                deterministic: false);
+                deterministic: true);
 
-        modelBuilder.Entity<Client>().HasData([
+        modelBuilder.Entity<Client>().HasData(
             new Client {Id = 1, Name = "Client 1", Description = "The first client"},
             new Client {Id = 2, Name = "Client 2", Description = "The second client"},
             new Client {Id = 3, Name = "Another", Description = "This is another client"}
-        ]);
+        );
     }
 }
