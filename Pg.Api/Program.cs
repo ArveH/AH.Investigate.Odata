@@ -8,7 +8,7 @@ builder.Services.AddControllers()
     {
         opt.AddRouteComponents(
                 "odata",
-                GetEdmModel(),
+                EdmBuilder.GetEdmModelFromDbContext<ClientContext>(),
                 s => ODataReplaceServices(ref s))
             .Select().Filter();
     });
@@ -32,13 +32,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
-static IEdmModel GetEdmModel()
-{
-    var builder = new ODataConventionModelBuilder();
-    builder.EntitySet<Client>("Clients");
-    return builder.GetEdmModel();
-}
 
 void ODataReplaceServices(ref IServiceCollection serviceCollection)
 {
