@@ -11,21 +11,28 @@ public class ClientsController : ControllerBase
         _context = context;
     }
 
-    // GET: api/Clients
-    [HttpGet]
-    [EnableQuery]
-    public IQueryable<Client> GetClients()
-    {
-        return _context.Clients.AsQueryable();
-    }
+    //[HttpGet]
+    //[EnableQuery]
+    //public IQueryable<Client> GetClients()
+    //{
+    //    return _context.Clients.AsQueryable();
+    //}
 
-    // GET: api/Clients
     [HttpGet]
-    [Route("/odata/oldclients")]
-    [EnableQuery]
-    public async Task<ActionResult<IEnumerable<Client>>> OldGetClients()
+    public async Task<IActionResult> GetClients(ODataQueryOptions<Client> queryOptions)
     {
-        return await _context.Clients.ToListAsync();
+        IQueryable<Client> query = _context.Clients;
+
+        var settings = new ODataQuerySettings
+        {
+            HandleNullPropagation = HandleNullPropagationOption.False,
+            
+        };
+        query = (IQueryable<Client>)queryOptions.ApplyTo(query, settings);
+
+        var result = await query.ToListAsync();
+
+        return Ok(result);
     }
 
     // GET: api/Clients/5

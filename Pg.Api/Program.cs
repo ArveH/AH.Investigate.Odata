@@ -31,7 +31,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
+await app.RunAsync();
 
 void ODataReplaceServices(ref IServiceCollection serviceCollection)
 {
