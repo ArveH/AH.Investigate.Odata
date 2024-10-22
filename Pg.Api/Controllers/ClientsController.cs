@@ -4,24 +4,25 @@
 [ApiController]
 public class ClientsController : ControllerBase
 {
-    private readonly ClientContext _context;
+    private readonly IDbFactory _dbFactory;
 
-    public ClientsController(ClientContext context)
+    public ClientsController(IDbFactory dbFactory)
     {
-        _context = context;
+        _dbFactory = dbFactory;
     }
 
     //[HttpGet]
     //[EnableQuery]
     //public IQueryable<Client> GetClients()
     //{
-    //    return _context.Clients.AsQueryable();
+    //    return context.Clients.AsQueryable();
     //}
 
     [HttpGet]
     public async Task<IActionResult> GetClients()
     {
-        IQueryable<Client> query = _context.Clients;
+        await using var context = _dbFactory.CreateContext();
+        IQueryable<Client> query = context.Clients;
 
         var edmModel = EdmBuilder.CreateEdmModel();
         var odataContext = new ODataQueryContext(
@@ -45,7 +46,8 @@ public class ClientsController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<Client>> GetClient(int id)
     {
-        var client = await _context.Clients.FindAsync(id);
+        await using var context = _dbFactory.CreateContext();
+        var client = await context.Clients.FindAsync(id);
 
         if (client == null)
         {
@@ -65,11 +67,12 @@ public class ClientsController : ControllerBase
             return BadRequest();
         }
 
-        _context.Entry(client).State = EntityState.Modified;
+        await using var context = _dbFactory.CreateContext();
+        context.Entry(client).State = EntityState.Modified;
 
         try
         {
-            await _context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
         catch (DbUpdateConcurrencyException)
         {
@@ -91,8 +94,9 @@ public class ClientsController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Client>> PostClient(Client client)
     {
-        _context.Clients.Add(client);
-        await _context.SaveChangesAsync();
+        await using var context = _dbFactory.CreateContext();
+        context.Clients.Add(client);
+        await context.SaveChangesAsync();
 
         return CreatedAtAction("GetClient", new { id = client.Id }, client);
     }
@@ -101,20 +105,22 @@ public class ClientsController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteClient(int id)
     {
-        var client = await _context.Clients.FindAsync(id);
+        await using var context = _dbFactory.CreateContext();
+        var client = await context.Clients.FindAsync(id);
         if (client == null)
         {
             return NotFound();
         }
 
-        _context.Clients.Remove(client);
-        await _context.SaveChangesAsync();
+        context.Clients.Remove(client);
+        await context.SaveChangesAsync();
 
         return NoContent();
     }
 
     private bool ClientExists(int id)
     {
-        return _context.Clients.Any(e => e.Id == id);
+        using var context = _dbFactory.CreateContext();
+        return context.Clients.Any(e => e.Id == id);
     }
 }

@@ -3,6 +3,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 var iLikeStrategy = LikeStrategy.CustomFilterBinder;
 
+builder.Services.AddSingleton<IDbFactory, DbFactory>();
 builder.Services.AddControllers()
     .AddOData(opt =>
     {
