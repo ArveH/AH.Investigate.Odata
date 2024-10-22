@@ -19,15 +19,21 @@ public class ClientsController : ControllerBase
     //}
 
     [HttpGet]
-    public async Task<IActionResult> GetClients(ODataQueryOptions<Client> queryOptions)
+    public async Task<IActionResult> GetClients()
     {
         IQueryable<Client> query = _context.Clients;
 
+        var edmModel = EdmBuilder.CreateEdmModel();
+        var odataContext = new ODataQueryContext(
+            edmModel,
+            typeof(Client),
+            null);        
         var settings = new ODataQuerySettings
         {
             HandleNullPropagation = HandleNullPropagationOption.False,
             
         };
+        var queryOptions = new ODataQueryOptions(odataContext, HttpContext.Request);
         query = (IQueryable<Client>)queryOptions.ApplyTo(query, settings);
 
         var result = await query.ToListAsync();

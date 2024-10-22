@@ -8,7 +8,7 @@ builder.Services.AddControllers()
     {
         opt.AddRouteComponents(
                 "odata",
-                EdmBuilder.GetEdmModelFromDbContext<ClientContext>(),
+                EdmBuilder.CreateEdmModel(),
                 s => ODataReplaceServices(ref s))
             .Select().Filter();
     });

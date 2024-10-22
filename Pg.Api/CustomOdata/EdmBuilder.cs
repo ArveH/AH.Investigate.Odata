@@ -28,4 +28,14 @@ public static class EdmBuilder
 
         return builder.GetEdmModel();
     }
+
+    public static IEdmModel CreateEdmModel()
+    {
+        var builder = new ODataConventionModelBuilder();
+        builder.EntitySet<Client>("Clients");
+        builder.EntityType<Client>()
+            .HasKey(e => e.Id)
+            .Property(e => e.Description);
+        return builder.GetEdmModel();
+    }
 }
