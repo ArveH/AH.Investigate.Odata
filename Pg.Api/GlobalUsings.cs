@@ -16,6 +16,7 @@ global using Npgsql.EntityFrameworkCore.PostgreSQL.Query.Internal;
 global using Pg.Api.CustomOdata;
 global using Pg.Api.Database;
 global using Pg.Api.Database.Entities;
+global using Pg.Api.Extensions;
 global using System.Diagnostics.Contracts;
 global using System.Linq.Expressions;
 global using System.Reflection;
