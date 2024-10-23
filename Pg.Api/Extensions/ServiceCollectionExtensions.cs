@@ -6,6 +6,7 @@ public static class ServiceCollectionExtensions
         this IServiceCollection services)
     {
         services.AddSingleton<IDbFactory, DbFactory>();
+        services.AddSingleton<IODataService, ODataService>();
         services.AddControllers()
             .AddOData(opt =>
             {

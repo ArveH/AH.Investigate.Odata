@@ -4,10 +4,14 @@
 [ApiController]
 public class ClientsController : ControllerBase
 {
+    private readonly IODataService _oDataService;
     private readonly IDbFactory _dbFactory;
 
-    public ClientsController(IDbFactory dbFactory)
+    public ClientsController(
+        IODataService oDataService,
+        IDbFactory dbFactory)
     {
+        _oDataService = oDataService;
         _dbFactory = dbFactory;
     }
 
@@ -17,16 +21,8 @@ public class ClientsController : ControllerBase
         await using var context = _dbFactory.CreateContext();
         IQueryable<Client> query = context.Clients;
 
-        var edmModel = EdmBuilder.CreateEdmModel();
-        var odataContext = new ODataQueryContext(
-            edmModel,
-            typeof(Client),
-            null);        
-
-        var queryOptions = new ODataQueryOptions(odataContext, HttpContext.Request);
-        query = (IQueryable<Client>)queryOptions.ApplyTo(query);
-
-        var result = await query.ToListAsync();
+        var result = await _oDataService.ApplyTo(query, Request)
+            .ToListAsync();
 
         return Ok(result);
     }
