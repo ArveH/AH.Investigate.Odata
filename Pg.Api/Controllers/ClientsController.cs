@@ -11,13 +11,6 @@ public class ClientsController : ControllerBase
         _dbFactory = dbFactory;
     }
 
-    //[HttpGet]
-    //[EnableQuery]
-    //public IQueryable<Client> GetClients()
-    //{
-    //    return context.Clients.AsQueryable();
-    //}
-
     [HttpGet]
     public async Task<IActionResult> GetClients()
     {
@@ -29,13 +22,9 @@ public class ClientsController : ControllerBase
             edmModel,
             typeof(Client),
             null);        
-        var settings = new ODataQuerySettings
-        {
-            HandleNullPropagation = HandleNullPropagationOption.False,
-            
-        };
+
         var queryOptions = new ODataQueryOptions(odataContext, HttpContext.Request);
-        query = (IQueryable<Client>)queryOptions.ApplyTo(query, settings);
+        query = (IQueryable<Client>)queryOptions.ApplyTo(query);
 
         var result = await query.ToListAsync();
 
